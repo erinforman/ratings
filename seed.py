@@ -36,6 +36,9 @@ def load_users():
 
 def load_movies():
     """Load movies from u.item into database."""
+
+    print("Movies")
+
     Movie.query.delete()
 
     for row in open("seed_data/u.item"):
@@ -56,8 +59,11 @@ def load_movies():
 
     db.session.commit()
 
+
 def load_ratings():
     """Load ratings from u.data into database."""
+
+    print("Ratings")
 
     Rating.query.delete()
 
