@@ -31,6 +31,14 @@ def user_list():
     users = User.query.all()
     return render_template("user_list.html", users=users)
 
+@app.route('/users/<user_id>')
+def user_info(user_id):
+
+    current_user = Rating.query.filter_by(user_id = user_id).options(db.joinedload('movie')).all()
+
+    return render_template("user_info.html", current_user = current_user)
+
+
 @app.route('/registration', methods=['GET'])
 def new_user():
 
@@ -43,13 +51,46 @@ def check_user():
     password =  request.form.get("password")
 
     user = User.query.filter_by(email = email).first()
-    print(user.email)
 
-    if  user:
-        return render_template("registration_form.html")
+    if user:
+        return render_template("return_form.html")
     else:
         new_user = User(email = email, password = password) 
+        db.session.add(new_user)
+        db.session.commit()
         return redirect("/")
+
+@app.route('/log-in', methods=['GET'])
+def user_login():
+
+    return render_template("login_form.html")
+
+@app.route('/log-in', methods=['POST'])
+def check_login():
+
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    user = User.query.filter_by(email = email).first()
+
+    if user.password == password:
+        session['user_login'] = user.user_id
+        flash('You were successfully logged in')
+        return redirect("/")
+    else:
+        flash('Incorrect password or user does not exist in our database!')
+        return redirect("/log-in")
+
+@app.route('/log-out')
+def logout():
+    session['user_login'] = {}
+    flash('You were successfully logged out')
+    return redirect("/")
+
+# @app.route('/user-details')
+# def user_deets():
+#     return
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the

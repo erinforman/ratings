@@ -23,6 +23,8 @@ class User(db.Model):
     age = db.Column(db.Integer, nullable=True)
     zipcode = db.Column(db.String(15), nullable=True)
 
+    movies = db.relationship("Movie", secondary = "ratings", backref = "users") 
+
     def __repr__(self):
 
         return f"<User user_id={self.user_id} email={self.email}>"
@@ -39,6 +41,7 @@ class Movie(db.Model):
     title = db.Column(db.String(200), nullable=True)
     released_at = db.Column(db.DateTime, nullable=True)
     imdb_url = db.Column(db.String(200), nullable=True)
+
 
     def __repr__(self):
 
@@ -60,15 +63,14 @@ class Rating(db.Model):
     user=db.relationship("User", backref=db.backref("ratings", order_by=rating_id))
 
     movie=db.relationship("Movie", backref=db.backref("ratings", order_by=rating_id))
-##############################################################################
-# Helper functions
+
     def __repr__(self):
 
-        return f"<Rating rating_id={self.rating_id} movie_id={self.movie_id} \
+        return f"<Rating printrating_id={self.rating_id} movie_id={self.movie_id} \
         user_id={self.user_id} score={self.score}>"
-
-
-
+        
+##############################################################################
+# Helper functions
 def connect_to_db(app):
     """Connect the database to our Flask app."""
 
