@@ -38,6 +38,13 @@ def user_info(user_id):
 
     return render_template("user_info.html", current_user = current_user)
 
+@app.route('/movie')
+def movie_list():
+    movies = Movie.query.all()
+    return render_template("movie_list.html", movies=movies)
+
+
+
 
 @app.route('/registration', methods=['GET'])
 def new_user():
@@ -76,7 +83,7 @@ def check_login():
     if user.password == password:
         session['user_login'] = user.user_id
         flash('You were successfully logged in')
-        return redirect("/")
+        return redirect('/users/'+ str(user.user_id))
     else:
         flash('Incorrect password or user does not exist in our database!')
         return redirect("/log-in")

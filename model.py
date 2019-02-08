@@ -68,7 +68,7 @@ class Rating(db.Model):
 
         return f"<Rating printrating_id={self.rating_id} movie_id={self.movie_id} \
         user_id={self.user_id} score={self.score}>"
-        
+
 ##############################################################################
 # Helper functions
 def connect_to_db(app):
